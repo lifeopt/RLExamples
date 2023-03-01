@@ -95,10 +95,11 @@ def monte_carlo(gamma=1., episodes=5000, evaluate=False):
         episode = []
     
         # lets start a game!
-        state = env.reset()
+        observation = env.reset()
+        state = observation[0][0]   # return initial state
         done = False
         
-        print("first state = ", state)
+        print("initial state = ", state)
     
         # and keep playing until it's done (recall this is something Gym will tell us)
         while not done:
@@ -108,12 +109,12 @@ def monte_carlo(gamma=1., episodes=5000, evaluate=False):
             action = get_action(Q, state, state_count[state], env.action_space.n)
 
             # when we take that action, recall Gym will give us a new state, some reward and if we are done
-            new_state, reward, done, _ = env.step(action=action)
+            observation, reward, done, _, _ = env.step(action=action)
         
             # save what happened, we're just going to keep the state, action and reward
             episode.append((state, action, reward))
         
-            state = new_state
+            state = observation[0][0]
 
         # at this point the game is finished, we either won or lost
         # so we need to take what happened and update our value function
