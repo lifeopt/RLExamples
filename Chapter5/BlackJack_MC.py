@@ -59,11 +59,13 @@ def evaluate_policy(Q, episodes=10000):
     """
     wins = 0
     for _ in range(episodes):
-        state = env.reset()
+        observation = env.reset()
+        state = (observation[0][0], observation[0][1])   # return initial state
         
         done = False
         while not done:
             action = np.argmax(Q[state])
+            
             
             state, reward, done, _ = env.step(action=action)
             
@@ -96,10 +98,10 @@ def monte_carlo(gamma=1., episodes=5000, evaluate=False):
     
         # lets start a game!
         observation = env.reset()
-        state = observation[0][0]   # return initial state
+        state = (observation[0][0], observation[0][1])   # return initial state
         done = False
         
-        print("initial state = ", state)
+        # print("initial state = ", state)
     
         # and keep playing until it's done (recall this is something Gym will tell us)
         while not done:
@@ -114,7 +116,7 @@ def monte_carlo(gamma=1., episodes=5000, evaluate=False):
             # save what happened, we're just going to keep the state, action and reward
             episode.append((state, action, reward))
         
-            state = observation[0][0]
+            state = (observation[0], observation[1])
 
         # at this point the game is finished, we either won or lost
         # so we need to take what happened and update our value function
@@ -136,5 +138,5 @@ def monte_carlo(gamma=1., episodes=5000, evaluate=False):
             
     return Q, evaluations
 
-Q_mc, evaluations = monte_carlo(episodes=500000, evaluate=False)
+Q_mc, evaluations = monte_carlo(episodes=100000, evaluate=False)
 Plot.plot_value_function(Q_mc)
